@@ -26,6 +26,7 @@ namespace HighfieldBackend.Controllers
             } else
             {
                 // Handle Error //
+                Console.WriteLine("An error has occurred whilst trying to access to HighFields API.");
                 return null;
             }
         }
@@ -71,13 +72,20 @@ namespace HighfieldBackend.Controllers
         {
             List<UserEntity> userEntities = await GetAPIResponse();
 
-            // Get top colours //
-            List<TopColoursDTO> topColours = CalculateTopColours(userEntities);
+            if(userEntities != null)
+            {
+                // Get top colours //
+                List<TopColoursDTO> topColours = CalculateTopColours(userEntities);
 
-            // Get age plus twenty //
-            List<AgePlusTwentyDTO> agePlusTwenty = CalculateAgePlusTwenty(userEntities);
+                // Get age plus twenty //
+                List<AgePlusTwentyDTO> agePlusTwenty = CalculateAgePlusTwenty(userEntities);
 
-            return Ok(new ResponseDTO() { ages = agePlusTwenty, topColours = topColours, users = userEntities });
+                return Ok(new ResponseDTO() { ages = agePlusTwenty, topColours = topColours, users = userEntities });
+            } else
+            {
+                return Ok("An error occurred whilst accessing the HighFields API.");
+            }
+            
         }
 
         [Route("")]
